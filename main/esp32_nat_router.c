@@ -323,6 +323,8 @@ static void initialize_console(void)
 #define BOOT_BUTTON_GPIO      28
 #elif defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32C2) || defined(CONFIG_IDF_TARGET_ESP32C6)
 #define BOOT_BUTTON_GPIO      9
+#elif defined(CONFIG_IDF_TARGET_ESP32)
+#define BOOT_BUTTON_GPIO      -1  // GPIO 0 is used for ST7789 LCD Backlight on ESP32-2432S022
 #else
 #define BOOT_BUTTON_GPIO      0
 #endif
@@ -332,10 +334,12 @@ static void initialize_console(void)
 void * led_status_thread(void * p)
 {
 #if !CONFIG_ETH_UPLINK
-    // Init boot button for factory reset detection (GPIO0 used by ETH clock on WT32-ETH01)
-    gpio_reset_pin(BOOT_BUTTON_GPIO);
-    gpio_set_direction(BOOT_BUTTON_GPIO, GPIO_MODE_INPUT);
-    gpio_set_pull_mode(BOOT_BUTTON_GPIO, GPIO_PULLUP_ONLY);
+    if (BOOT_BUTTON_GPIO >= 0) {
+        // Init boot button for factory reset detection (GPIO0 used by ETH clock on WT32-ETH01)
+        gpio_reset_pin(BOOT_BUTTON_GPIO);
+        gpio_set_direction(BOOT_BUTTON_GPIO, GPIO_MODE_INPUT);
+        gpio_set_pull_mode(BOOT_BUTTON_GPIO, GPIO_PULLUP_ONLY);
+    }
 #endif
 
     bool led_enabled = (led_gpio >= 0);
@@ -369,7 +373,7 @@ void * led_status_thread(void * p)
             }
 
 #if !CONFIG_ETH_UPLINK
-            if (gpio_get_level(BOOT_BUTTON_GPIO) == 0) {
+            if (BOOT_BUTTON_GPIO >= 0 && gpio_get_level(BOOT_BUTTON_GPIO) == 0) {
                 held_ms += POLL_INTERVAL_MS;
                 // Rapid LED toggle for visual feedback during hold
                 if (led_enabled) {

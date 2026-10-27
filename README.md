@@ -36,6 +36,7 @@ Starting from this code base I started several spin-off projects with slightly d
 - **Serial Console**: Full CLI for advanced configuration
 - **Remote Console**: Network-accessible CLI via TCP (password protected, per-interface binding)
 - **LED Status Indicator**: Visual feedback via plain GPIO LED or addressable LED strip (WS2812/SK6812) with color-coded status
+- **Color LCD Display (ESP32-2432S022 / CYD)**: Live graphical dashboard on 2.2" ST7789 parallel display showing uplink status, IP, repeater SSID/password, live client counter, and throughput
 - **OLED Display**: Status display on 72x40 I2C SSD1306 OLEDs (as found on some ESP32-C3 mini boards)
 - **MQTT Home Assistant**: Publish telemetry and per-client stats to MQTT with HA auto-discovery
 - **MCP Bridge (AI-Ready)**: BETA - Control the router from AI assistants (Claude, etc.) via the Model Context Protocol

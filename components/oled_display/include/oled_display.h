@@ -8,11 +8,14 @@
 extern "C" {
 #endif
 
-#if defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3)
+#if defined(CONFIG_IDF_TARGET_ESP32) || defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3)
 
 #if defined(CONFIG_IDF_TARGET_ESP32S3)
 #define OLED_DEFAULT_SDA  17
 #define OLED_DEFAULT_SCL  18
+#elif defined(CONFIG_IDF_TARGET_ESP32)
+#define OLED_DEFAULT_SDA  21
+#define OLED_DEFAULT_SCL  22
 #else
 #define OLED_DEFAULT_SDA  5
 #define OLED_DEFAULT_SCL  6
@@ -20,18 +23,18 @@ extern "C" {
 #define OLED_I2C_ADDR     0x3C
 
 /**
- * @brief Initialize OLED display from NVS config.
- * If enabled, starts the display update task.
+ * @brief Initialize display from NVS config.
+ * Starts the display update task.
  */
 void oled_display_init(void);
 
 /**
- * @brief Enable OLED display (persisted to NVS, requires reboot).
+ * @brief Enable display (persisted to NVS, requires reboot).
  */
 void oled_display_enable(void);
 
 /**
- * @brief Disable OLED display (persisted to NVS, requires reboot).
+ * @brief Disable display (persisted to NVS, requires reboot).
  */
 void oled_display_disable(void);
 
@@ -41,14 +44,14 @@ void oled_display_disable(void);
 void oled_display_set_gpio(int sda, int scl);
 
 /**
- * @brief Get current OLED config.
- * @param[out] enabled  Whether OLED is enabled
+ * @brief Get current display config.
+ * @param[out] enabled  Whether display is enabled
  * @param[out] sda      SDA GPIO pin
  * @param[out] scl      SCL GPIO pin
  */
 void oled_display_get_config(bool *enabled, int *sda, int *scl);
 
-#else /* !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3 */
+#else /* !CONFIG_IDF_TARGET_ESP32 && !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32S3 */
 
 static inline void oled_display_init(void) {}
 static inline void oled_display_enable(void) {}
@@ -60,7 +63,7 @@ static inline void oled_display_get_config(bool *enabled, int *sda, int *scl) {
     if (scl) *scl = 0;
 }
 
-#endif /* CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3 */
+#endif
 
 #ifdef __cplusplus
 }
